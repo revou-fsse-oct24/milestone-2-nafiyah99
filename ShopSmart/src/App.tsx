@@ -7,9 +7,10 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ProductList from './pages/ProductList';
 import ProductDetail from './pages/ProductDetail';
-import NotFound from './pages/NotFound';
+// import NotFound from './pages/NotFound';
 import ProductLayout from './pages/ProductLayout';
 import Navbar from './components/Navbar';
+import Cart from './pages/Cart';
 // import ProtectedRoute from './utils/ProtectedRoute';
 
 export interface Products {
@@ -25,15 +26,59 @@ export interface Products {
   images: string[];
 }
 
+export interface CartItem {
+  product: Products;
+  quantity: number;
+}
+
 const App = () => {
-
-  const handleAddToCart = (products: Products[]) => {
-    console.log('succesfully added to cart', products);
-  }
-
   const [products, setProducts] = useState<Products[]>([]);
   const [items, setItems] = useState<Products | null>(null);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
   
+  const handleAddToCart = (product: Products) => {
+      setCart((prevCart) => {
+        const existingItem = prevCart.find((item) => item.product.id === product.id);
+        if (existingItem) {
+          return prevCart.map((item) =>
+            item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          );
+        } else {
+          return [...prevCart, { product, quantity: 1 }];
+        }
+      });
+    };
+
+    const handleRemoveFromCart = async (productId: number) => {
+      try {
+        const response = await fetch(`https://api.escuelajs.co/api/v1/products/${productId}`, {
+          method: 'DELETE',
+        });
+        const result = await response.json();
+        if (result) {
+          setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
+        }
+      } catch (error) {
+        console.error('Error removing item from cart', error);
+      }
+    };
+
+  const handleUpdateQuantity = (productId: number, quantity: number) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.product.id === productId ? { ...item, quantity: item.quantity + quantity } : item
+      ).filter((item) => item.quantity > 0)
+    );
+  };
+
+
   const productsURL: string = 'https://api.escuelajs.co/api/v1/products';
   const getProducts = async () => {
     try {
@@ -79,34 +124,34 @@ const App = () => {
         setProducts(data);
       }
     } catch (error) {
-      console.error('Error fetching category', error)
+      console.error('Error fetching category', error);
     }
   };
 
   return (
     <>
-      <Navbar />     
+      <Navbar cartItemCount={cart.reduce((count, item) => count + item.quantity, 0)} />
       <br />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
         {/* <Route element={<ProtectedRoute />}> */}
+        <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} />} />
         {products.length > 0 && (
-        <Route path="/product" element={<ProductLayout />}>
-          <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={() => handleAddToCart} />} />
-          <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={() => handleAddToCart}  />} />
-        </Route>
+          <Route path="/product" element={<ProductLayout />}>
+            <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={handleAddToCart} />} />
+            <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={handleAddToCart} />} />
+          </Route>
         )}
         {/* </Route> */}
 
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
 
       {/* <Footer /> */}
     </>
   );
-}
+};
 
 export default App;

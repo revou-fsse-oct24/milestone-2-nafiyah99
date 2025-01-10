@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface FormData {
   email: string;
@@ -17,9 +17,9 @@ const Login: React.FC = () => {
     email: '',
     password: '',
   });
-
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,16 +43,28 @@ const Login: React.FC = () => {
     return errors;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errors = validateForm();
     if (Object.keys(errors).length === 0) {
-      setFormData({
-        email: '',
-        password: '',
-      });
+      try {
+        const response = await fetch('https://api.escuelajs.co/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+          navigate('/product');
+        } else {
+          setFormErrors({ email: 'Invalid credentials' });
+        }
+      } catch (error) {
+        console.error('Error logging in', error);
+      }
     } else {
-      setFormErrors(formData);
+      setFormErrors(errors);
     }
   };
 
@@ -127,7 +139,9 @@ const Login: React.FC = () => {
                 >
                   Login
                 </button>
-                <Link to="/register" className='text-sm'>Register</Link>
+                <Link to="/register" className="text-sm">
+                  Register
+                </Link>
               </div>
             </form>
           </div>

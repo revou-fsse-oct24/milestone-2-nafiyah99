@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { Products } from '../App';
 
-const ProductDetail = ({ getItems, items, onClickProps }: { getItems: (id: string) => void; items: Products | null; onClickProps: () => void }) => {
+const ProductDetail = ({ getItems, items, onClickProps }: { getItems: (id: string) => void; items: Products | null; onClickProps: (product: Products) => void }) => {
   const { id } = useParams();
 
   const navigate = useNavigate();

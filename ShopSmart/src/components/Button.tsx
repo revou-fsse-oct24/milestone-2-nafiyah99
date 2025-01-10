@@ -1,7 +1,12 @@
-const Button = ({ onClickProps, children }: { onClickProps: () => void; children: React.ReactNode }) => {
+import { Products } from "../App";
+
+const Button = ({ onClickProps, children }: { onClickProps: (product: Products) => void; children: React.ReactNode }) => {
+
+  const product = {} as Products; // Replace with actual product data
+
   return (
     <>
-      <button onClick={onClickProps} className="bg-zinc-800 w-max">{children}</button>
+      <button onClick={()=>onClickProps(product)} className="bg-zinc-800 w-max">{children}</button>
     </>
   );
 };
