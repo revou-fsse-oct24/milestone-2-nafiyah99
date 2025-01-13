@@ -134,7 +134,7 @@ const App = () => {
         {products.length > 0 && (
           <Route path="/product" element={<ProductLayout />}>
             <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={handleAddToCart} />} />
-            <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={handleAddToCart} />} />
+            <Route path=":id" element={<ProductDetail getItems={getItems} product={items} onClickProps={handleAddToCart} />} />
           </Route>
         )}
         {/* </Route> */}
