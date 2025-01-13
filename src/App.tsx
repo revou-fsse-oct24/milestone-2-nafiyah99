@@ -54,18 +54,8 @@ const App = () => {
     });
   };
 
-  const handleRemoveFromCart = async (productId: number) => {
-    try {
-      const response = await fetch(`https://api.escuelajs.co/api/v1/products/${productId}`, {
-        method: 'DELETE',
-      });
-      const result = await response.json();
-      if (result) {
-        setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
-      }
-    } catch (error) {
-      console.error('Error removing item from cart', error);
-    }
+  const handleRemoveFromCart = (productId: number) => {
+    setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
   };
 
   const handleUpdateQuantity = (productId: number, quantity: number) => {
@@ -134,7 +124,7 @@ const App = () => {
         {products.length > 0 && (
           <Route path="/product" element={<ProductLayout />}>
             <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={handleAddToCart} />} />
-            <Route path=":id" element={<ProductDetail getItems={getItems} product={items} onClickProps={handleAddToCart} />} />
+            <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={handleAddToCart} />} />
           </Route>
         )}
         {/* </Route> */}
