@@ -1,3 +1,4 @@
+import React from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import { Products } from '../App';
 import Button from '../components/Button';

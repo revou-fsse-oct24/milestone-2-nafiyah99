@@ -13,7 +13,7 @@ interface Products {
   images: string[];
 }
 
-const useProducts: React.FC = () => {
+const useProducts = (): Products[] => {
   const [products, setProducts] = useState<Products[]>([]);
   const URL: string = 'https://api.escuelajs.co/api/v1/products';
   
@@ -31,14 +31,7 @@ const useProducts: React.FC = () => {
     fetchProducts();
   }, []);
 
-  console.log('products', products);
-
-  return (
-    <>
-      <h1>Products</h1>
-      products;
-    </>
-  );
+  return products;
 };
 
 export default useProducts;

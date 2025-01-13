@@ -1,5 +1,5 @@
-import React from "react";
-import { Products } from "../App";
+import React from 'react';
+import { Products } from '../App';
 
 interface CartItemProps {
   item: { product: Products; quantity: number };
@@ -20,10 +20,17 @@ const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onUpdateQuantity })
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <button className="text-xs bg-zinc-800 p-2 rounded" onClick={() => onUpdateQuantity(product.id, quantity - 1)} disabled={quantity <= 1}>–</button>
+        <button className={`text-xs p-2 rounded ${quantity <= 1 ? 'bg-zinc-700 cursor-not-allowed' : 'bg-zinc-800 hover:bg-zinc-700'}`}
+           onClick={() => onUpdateQuantity(product.id, -1)} disabled={quantity <= 1}>
+          –
+        </button>
         <p>{quantity}</p>
-        <button className="text-xs bg-zinc-800 p-2 rounded" onClick={() => onUpdateQuantity(product.id, quantity + 1)}>+</button>
-        <button className="text-xs bg-zinc-800 p-2 rounded" onClick={() => onRemove(product.id)}>Remove</button>
+        <button className="text-xs bg-zinc-800 p-2 rounded" onClick={() => onUpdateQuantity(product.id, +1)}>
+          +
+        </button>
+        <button className="text-xs bg-zinc-800 p-2 rounded" onClick={() => onRemove(product.id)}>
+          Remove
+        </button>
       </div>
     </div>
   );

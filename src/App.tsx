@@ -42,42 +42,35 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
-  
+
   const handleAddToCart = (product: Products) => {
-      setCart((prevCart) => {
-        const existingItem = prevCart.find((item) => item.product.id === product.id);
-        if (existingItem) {
-          return prevCart.map((item) =>
-            item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-          );
-        } else {
-          return [...prevCart, { product, quantity: 1 }];
-        }
-      });
-    };
-
-    const handleRemoveFromCart = async (productId: number) => {
-      try {
-        const response = await fetch(`https://api.escuelajs.co/api/v1/products/${productId}`, {
-          method: 'DELETE',
-        });
-        const result = await response.json();
-        if (result) {
-          setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
-        }
-      } catch (error) {
-        console.error('Error removing item from cart', error);
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.product.id === product.id);
+      if (existingItem) {
+        return prevCart.map((item) => (item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item));
+      } else {
+        return [...prevCart, { product, quantity: 1 }];
       }
-    };
-
-  const handleUpdateQuantity = (productId: number, quantity: number) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.product.id === productId ? { ...item, quantity: item.quantity + quantity } : item
-      ).filter((item) => item.quantity > 0)
-    );
+    });
   };
 
+  const handleRemoveFromCart = async (productId: number) => {
+    try {
+      const response = await fetch(`https://api.escuelajs.co/api/v1/products/${productId}`, {
+        method: 'DELETE',
+      });
+      const result = await response.json();
+      if (result) {
+        setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
+      }
+    } catch (error) {
+      console.error('Error removing item from cart', error);
+    }
+  };
+
+  const handleUpdateQuantity = (productId: number, quantity: number) => {
+    setCart((prevCart) => prevCart.map((item) => (item.product.id === productId ? { ...item, quantity: item.quantity + quantity } : item)).filter((item) => item.quantity > 0));
+  };
 
   const productsURL: string = 'https://api.escuelajs.co/api/v1/products';
   const getProducts = async () => {

@@ -1,8 +1,15 @@
+import React from 'react';
 import { CartItem as CartItemType } from '../App';
 import Button from '../components/Button';
 import CartItem from '../components/CartItem';
 
-const Cart = ({ cart, onRemove, onUpdateQuantity }: { cart: CartItemType[]; onRemove: (productId: number) => void; onUpdateQuantity: (productId: number, quantity: number) => void }) => {
+interface CartProps {
+  cart: CartItemType[];
+  onRemove: (productId: number) => void;
+  onUpdateQuantity: (productId: number, quantity: number) => void;
+}
+
+const Cart: React.FC<CartProps> = ({ cart, onRemove, onUpdateQuantity }) => {
   const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   return (
