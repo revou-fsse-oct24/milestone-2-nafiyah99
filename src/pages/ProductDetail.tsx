@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { Products } from '../App';
@@ -15,7 +15,7 @@ const ProductDetail = ({ getItems, items, onClickProps }: { getItems: (id: strin
     if (id) {
       getItems(id);
     }
-  }, []);
+  }, [getItems, id]);
 
   if (!items) {
     return (
