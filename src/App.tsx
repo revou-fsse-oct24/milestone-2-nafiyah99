@@ -11,7 +11,8 @@ import ProductDetail from './pages/ProductDetail';
 import ProductLayout from './pages/ProductLayout';
 import Navbar from './components/Navbar';
 import Cart from './pages/Cart';
-// import ProtectedRoute from './utils/ProtectedRoute';
+import Footer from './components/Footer';
+import ProtectedRoute from './utils/ProtectedRoute';
 
 export interface Products {
   id: number;
@@ -113,26 +114,28 @@ const App = () => {
 
   return (
     <>
-      <Navbar cartItemCount={cart.reduce((count, item) => count + item.quantity, 0)} />
-      <br />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        {/* <Route element={<ProtectedRoute />}> */}
-        <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} />} />
-        {products.length > 0 && (
-          <Route path="/product" element={<ProductLayout />}>
-            <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={handleAddToCart} />} />
-            <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={handleAddToCart} />} />
+      <div className='flex flex-col items-center'>
+        <Navbar cartItemCount={cart.reduce((count, item) => count + item.quantity, 0)} />
+        <br />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route element={<ProtectedRoute category={''} title={''} />}>
+          <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} />} />
+          {products.length > 0 && (
+            <Route path="/product" element={<ProductLayout />}>
+              <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={handleAddToCart} />} />
+              <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={handleAddToCart} />} />
+            </Route>
+          )}
           </Route>
-        )}
-        {/* </Route> */}
 
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Routes>
 
-      {/* <Footer /> */}
+        <Footer />
+      </div>
     </>
   );
 };

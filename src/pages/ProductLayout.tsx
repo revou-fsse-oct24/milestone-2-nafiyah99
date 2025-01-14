@@ -12,8 +12,8 @@ const ProductLayout = () => {
 
   return (
     <>
-      <div className="mt-16">
-        {location.pathname === '/product' && <input className="bg-zinc-900 border border-zinc-700 flex text-white p-3 w-72 m-2 rounded-xl" placeholder="Search by title" type="text" value={title ?? ''} onChange={handleSearchChange} />}
+      <div className="mt-20 ml-10">
+        {location.pathname === '/product' && <input className="bg-zinc-900 border border-zinc-700 flex text-white p-3 w-auto m-2 ml-10 rounded-xl" placeholder="Search by title" type="text" value={title ?? ''} onChange={handleSearchChange} />}
         <Outlet context={{ category, title }} />
       </div>
     </>
@@ -21,3 +21,5 @@ const ProductLayout = () => {
 };
 
 export default ProductLayout;
+
+// bisa diatur utk jika kategori sudah dipilih, maka searchbar hanya akan menampilkan produk yang sesuai kategorinya saja

@@ -14,7 +14,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove, onUpdateQuantity }) => {
 
   return (
     <>
-      <section className="mt-16 bg-zinc-900 flex flex-col items-start border border-zinc-700 rounded-xl p-10 gap-5">
+      <section className="m-20 w-auto md:max-w-screen-md bg-zinc-900 flex flex-col items-start justify-center border border-zinc-700 rounded-xl p-10 gap-5">
         {cart.length === 0 ? (
           <p className="text-2xl">There are no items in your cart.</p>
         ) : (

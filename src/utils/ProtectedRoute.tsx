@@ -1,8 +1,8 @@
-import { Navigate } from 'react-router-dom';
+import {  Navigate, Outlet } from 'react-router-dom';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ category, title }: { category: string; title: string }) => {
   const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login" />;
+  return token ? <Outlet context={{ category, title }} /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;
