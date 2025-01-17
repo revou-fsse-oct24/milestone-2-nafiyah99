@@ -46,11 +46,44 @@ const Register: React.FC = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newErrors = validateForm();
     if (Object.keys(newErrors).length === 0) {
-      navigate('/login');
+      try {
+        await fetch('https://api.escuelajs.co/api/v1/users/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+        const loginResponse = await fetch('https://api.escuelajs.co/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+        const loginData = await loginResponse.json();
+        if (loginData.access_token) {
+          localStorage.clear();
+          localStorage.setItem('token', loginData.access_token);
+          localStorage.setItem('user', JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+          }));
+          navigate('/product');
+        } else {
+          setErrors({ email: 'Invalid credentials to regist' });
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        setErrors({ email: 'Registration failed' });
+      }
     } else {
       setErrors(newErrors);
     }
