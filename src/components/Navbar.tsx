@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import LogoutModal from './LogoutModal';
 import '../App.css';
 
 const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -11,7 +13,8 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    localStorage.removeItem('refresh_token');
+    navigate('/');
   };
 
   const toggleMenu = () => {
@@ -39,11 +42,11 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
               <NavLink to="/product" onClick={() => setIsMenuOpen(false)}>Product List</NavLink>
             </li>
             <li>
-              <NavLink to="/cart" onClick={() => setIsMenuOpen(false)}>Cart ({cartItemCount})</NavLink>
+              <NavLink to="/cart" onClick={() => setIsMenuOpen(false)}>Cart {isLoggedIn ? `(${cartItemCount})` : ''}</NavLink>
             </li>
             <li className='bg-white px-4 py-2 rounded-md'>
               {isLoggedIn ? (
-                <NavLink to={location.pathname} onClick={() => { handleLogout(); setIsMenuOpen(false); }}>
+                <NavLink to={location.pathname} onClick={() => { setIsLogoutModalOpen(true); setIsMenuOpen(false); }}>
                   Logout
                 </NavLink>
               ) : (
@@ -72,11 +75,11 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
               <NavLink to="/product" onClick={() => setIsMenuOpen(false)}>Product List</NavLink>
             </li>
             <li>
-              <NavLink to="/cart" onClick={() => setIsMenuOpen(false)}>Cart ({cartItemCount})</NavLink>
+              <NavLink to="/cart" onClick={() => setIsMenuOpen(false)}>Cart {isLoggedIn ? `(${cartItemCount})` : ''}</NavLink>
             </li>
             <li>
               {isLoggedIn ? (
-                <NavLink to={location.pathname} onClick={() => { handleLogout(); setIsMenuOpen(false); }}>
+                <NavLink to={location.pathname} onClick={() => { setIsLogoutModalOpen(true); setIsMenuOpen(false); }}>
                   Logout
                 </NavLink>
               ) : (
@@ -86,6 +89,12 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
           </ul>
         </div>
       )}
+
+      <LogoutModal 
+        isOpen={isLogoutModalOpen} 
+        onClose={() => setIsLogoutModalOpen(false)} 
+        onConfirm={handleLogout} 
+      />
     </>
   );
 };

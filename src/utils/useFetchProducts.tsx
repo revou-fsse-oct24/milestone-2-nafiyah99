@@ -13,25 +13,38 @@ interface Products {
   images: string[];
 }
 
-const useProducts = (): Products[] => {
+const useFetchProducts = () => {
   const [products, setProducts] = useState<Products[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const URL: string = 'https://api.escuelajs.co/api/v1/products';
   
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const response = await fetch(URL);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
         const data = await response.json();
         setProducts(data);
-      } catch (error) {
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(String(error));
+        }
         console.error('Error fetching products', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
 
-  return products;
+  return { products, loading, error };
 };
 
-export default useProducts;
+export default useFetchProducts;

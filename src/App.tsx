@@ -7,12 +7,12 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ProductList from './pages/ProductList';
 import ProductDetail from './pages/ProductDetail';
-// import NotFound from './pages/NotFound';
 import ProductLayout from './pages/ProductLayout';
 import Navbar from './components/Navbar';
 import Cart from './pages/Cart';
 import Footer from './components/Footer';
 import ProtectedRoute from './utils/ProtectedRoute';
+import useFetchProducts from './utils/useFetchProducts';
 
 export interface Products {
   id: number;
@@ -33,12 +33,14 @@ export interface CartItem {
 }
 
 const App = () => {
-  const [products, setProducts] = useState<Products[]>([]);
+  const { products, loading, error } = useFetchProducts();
   const [items, setItems] = useState<Products | null>(null);
   const [cart, setCart] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
+
+  const isLoggedIn = Boolean(localStorage.getItem('token'));
 
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -63,27 +65,6 @@ const App = () => {
     setCart((prevCart) => prevCart.map((item) => (item.product.id === productId ? { ...item, quantity: item.quantity + quantity } : item)).filter((item) => item.quantity > 0));
   };
 
-  const productsURL: string = 'https://api.escuelajs.co/api/v1/products';
-  const getProducts = async () => {
-    try {
-      const response = await fetch(productsURL);
-      const data = await response.json();
-      if (data) {
-        setProducts(data);
-      } else {
-        console.log('no data found', data);
-      }
-    } catch (error) {
-      console.error('Error fetching products', error);
-    }
-  };
-
-  useEffect(() => {
-    getProducts();
-  }, []);
-
-  console.log('products', products);
-
   const getItems = async (id: string) => {
     const itemsURL: string = `https://api.escuelajs.co/api/v1/products/${id}`;
     try {
@@ -105,7 +86,7 @@ const App = () => {
       const response = await fetch(categoryURL);
       const data = await response.json();
       if (data) {
-        setProducts(data);
+        return data;
       }
     } catch (error) {
       console.error('Error fetching category', error);
@@ -114,24 +95,24 @@ const App = () => {
 
   return (
     <>
-      <div className='flex flex-col items-center'>
-        <Navbar cartItemCount={cart.reduce((count, item) => count + item.quantity, 0)} />
+      <div className="flex flex-col items-center">
+        <Navbar cartItemCount={isLoggedIn ? cart.reduce((count, item) => count + item.quantity, 0) : 0} />
         <br />
+        {loading && <p>Loading products...</p>}
+        {error && <p>Error fetching products: {error}</p>}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route element={<ProtectedRoute category={''} title={''} />}>
-          <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} />} />
-          {products.length > 0 && (
-            <Route path="/product" element={<ProductLayout />}>
-              <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={handleAddToCart} />} />
-              <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={handleAddToCart} />} />
-            </Route>
-          )}
+            <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} onUpdateQuantity={handleUpdateQuantity} />} />
+            {products.length > 0 && (
+              <Route path="/product" element={<ProductLayout />}>
+                <Route index element={<ProductList filterCategory={filterCategory} products={products} onClickProps={handleAddToCart} />} />
+                <Route path=":id" element={<ProductDetail getItems={getItems} items={items} onClickProps={handleAddToCart} />} />
+              </Route>
+            )}
           </Route>
-
-          {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
 
         <Footer />
