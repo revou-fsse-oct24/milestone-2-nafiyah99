@@ -55,7 +55,7 @@ const Login: React.FC = () => {
         });
         const data = await response.json();
         if (data.access_token) {
-          localStorage.clear();
+          
           localStorage.setItem('token', data.access_token);
           localStorage.setItem('user', JSON.stringify({
             email: formData.email,
