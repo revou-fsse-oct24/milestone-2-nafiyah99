@@ -6,20 +6,21 @@
 ## Features
 - Product Detail
 - Category Filter
-- Cart
+- Shopping Cart
 
 ## Installation Instructions
-1. Clone the repository: `git clone https://github.com/milestone-2-nafiyah99.git`
+1. Clone the repository: `git clone https://github.com/revou-fsse-oct24/milestone-2-nafiyah99.git`
 2. Navigate to the project directory:
-`cd milestone-2-nafiyah99`
+`cd revou-fsse-oct24/milestone-2-nafiyah99`
 3. Install dependencies: `npm install`
-4. Start the application: `npm start`
-
-## Usage
-Once the application is set up, you can access it at `http://localhost:3000`.
+4. Start the development server: `npm run dev`
+5. Build the project: `npm run build`
+6. Preview the build project: `npm run preview` 
 
 ## Technologies Used
-- React + Vite
+- React
+- Vite
+- Typescript
 - Tailwind CSS
 
 ## Contributing
