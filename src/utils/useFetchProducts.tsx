@@ -17,6 +17,7 @@ const useFetchProducts = () => {
   const [products, setProducts] = useState<Products[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  
   const URL: string = 'https://api.escuelajs.co/api/v1/products';
   
   useEffect(() => {

@@ -27,7 +27,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onUpdateQuantity })
         <button className="text-xs bg-zinc-800 p-2 rounded" onClick={() => onUpdateQuantity(product.id, +1)}>
           +
         </button>
-        <button className="text-xs bg-zinc-800 p-2 rounded" onClick={() => onRemove(product.id)}>
+        <button className="text-xs bg-red-600 p-2 rounded" onClick={() => onRemove(product.id)}>
           Remove
         </button>
       </div>
