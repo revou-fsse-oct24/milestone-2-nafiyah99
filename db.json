@@ -1,0 +1,26 @@
+{
+    "books": [
+      {
+        "id": 1,
+        "name": "Harry Potter 1"
+      },
+      {
+        "id": 2,
+        "name": "Game of thrones "
+      },
+      {
+        "id": 3,
+        "name": "Lord of the ring"
+      }
+    ],
+    "film": [
+      {
+        "id": 1,
+        "name": "Harry Potter 1"
+      },
+      {
+        "id": 2,
+        "name": "Harry Potter 2"
+      }
+    ]
+  }

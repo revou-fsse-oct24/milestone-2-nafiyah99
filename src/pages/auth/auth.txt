@@ -1,0 +1,2 @@
+authentication pages
+consist of a series of questions that are used to gather information about the user's (in a form og login, registration, etc.) and to verify their identity. These pages are typically used to authenticate users before they can access

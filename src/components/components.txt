@@ -1,0 +1,3 @@
+layout components for pages
+
+contains reusable ui components and any other specific components used throughout the application

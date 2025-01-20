@@ -1,0 +1,5 @@
+middleware for authentication, authorization, and rate limiting
+
+contains middleware functions to run before rendering pages, useful for authentication and redirects
+It is designed to be highly customizable and can be used in a variety
+

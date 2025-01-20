@@ -1,0 +1,3 @@
+ui components
+
+consist of a set of components that are used to build the UI of an application (button, input, label, etc.).
