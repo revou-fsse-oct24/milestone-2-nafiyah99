@@ -17,9 +17,9 @@ const useFetchProducts = () => {
   const [products, setProducts] = useState<Products[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const URL: string = 'https://api.escuelajs.co/api/v1/products';
-  
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -29,7 +29,11 @@ const useFetchProducts = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setProducts(data);
+        console.log('products', data)
+        const filteredProducts = data.filter((product: Products) => 
+          product.images.length >= 3
+        );
+        setProducts(filteredProducts);
       } catch (error: unknown) {
         if (error instanceof Error) {
           setError(error.message);

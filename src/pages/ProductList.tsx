@@ -16,8 +16,8 @@ const ProductList = ({ filterCategory, products, onClickProps }: { filterCategor
       <section className='m-10'>
         <h1 className="text-start text-4xl m-5 ms-0">Product List</h1>
 
-        <div className="flex flex-col justify-between md:flex-row">
-          <aside className="mt-3 p-3 md:h-full gap-2 bg-zinc-900 border border-zinc-700 rounded-xl">
+        <div className="flex flex-col md:flex-row gap-6">
+          <aside className="mt-3 p-3 h-72 w-1/4 bg-zinc-900 border border-zinc-700 rounded-xl">
             <h2>Categories:</h2>
             <ul className="flex flex-col gap-1 mt-1">
               <Link to="/product" className="bg-slate-800 lg:px-4 md:px-4 p-1 lg:w-full md:w-full" onClick={() => filterCategory('')}>
@@ -41,8 +41,8 @@ const ProductList = ({ filterCategory, products, onClickProps }: { filterCategor
             </ul>
           </aside>
 
-          <section>
-            <div className="p-3 flex flex-wrap gap-3 rounded-xl max-w-4xl justify-center">
+          <section className='w-3/4 md:col-span-3'>
+            <div className="p-3 flex flex-wrap gap-3 rounded-xl justify-center">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
                   <div key={product.id} className="p-4 max-w-64 items justify-between flex flex-col gap-4 bg-zinc-900 rounded-xl border border-zinc-700">
