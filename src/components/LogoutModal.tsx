@@ -15,7 +15,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onConfirm })
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-zinc-800 p-6 rounded shadow-md">
         <h2 className="text-lg font-bold">Confirm Logout</h2>
         <p className='p-4'>Are you sure you want to log out?</p>

@@ -44,6 +44,9 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
             <li>
               <NavLink to="/cart" onClick={() => setIsMenuOpen(false)}>Cart {isLoggedIn ? `(${cartItemCount})` : ''}</NavLink>
             </li>
+            <li>
+              <NavLink to="/profile" onClick={() => {} }>Profile</NavLink>
+            </li>
             <li className='bg-white px-4 py-2 rounded-md'>
               {isLoggedIn ? (
                 <NavLink to={location.pathname} onClick={() => { setIsLogoutModalOpen(true); setIsMenuOpen(false); }}>

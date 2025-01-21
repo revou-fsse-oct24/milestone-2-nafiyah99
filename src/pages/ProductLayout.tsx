@@ -15,7 +15,7 @@ const ProductLayout = () => {
 
   return (
     <>
-      <div className="mt-20 ml-10">
+      <div className="mt-20">
         {location.pathname === '/product' && (
           <input
             className="bg-zinc-900 border border-zinc-700 flex text-white p-3 w-auto m-2 ml-10 rounded-xl"
