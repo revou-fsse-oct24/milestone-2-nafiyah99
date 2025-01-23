@@ -1,8 +1,11 @@
 import React from 'react'
+import Navbar from './UI/Navbar'
 
 const Header = () => {
   return (
-    <div>Header</div>
+    <>
+      <Navbar cartItemCount={0} /> 
+    </>
   )
 }
 
