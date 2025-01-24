@@ -1,29 +1,57 @@
-import React from 'react';
-import { CartItemProps } from '@/types';
-import Image from 'next/image';
+import React from "react";
+import { CartItem as CartItemType } from "@/types";
+import Image from "next/image";
 
+interface CartItemProps {
+  item: CartItemType;
+  onRemove: () => void;
+  onIncrease: () => void;
+  onDecrease: () => void;
+}
 
-const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onUpdateQuantity }) => {
+const CartItem: React.FC<CartItemProps> = ({
+  item,
+  onRemove,
+  onIncrease,
+  onDecrease,
+}) => {
   const { product, quantity } = item;
 
   return (
-    <div className="flex justify-between items-center gap-10 w-full p-4 bg-zinc-900 border border-zinc-700 rounded-xl">
-      <div className="flex items-center gap-4">
-        <Image width={80} height={80} src={product.images[0]} alt={product.title} className="w-20 h-20 object-cover rounded-lg" />
-        <div className="flex flex-col items-start">
-          <h2 className="text-lg font-semibold">{product.title}</h2>
+    <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-lg mb-4">
+      <div className="flex items-center">
+        <Image
+          src={product.images[0]}
+          alt={product.title}
+          width={80}
+          height={80}
+          className="rounded-md mr-4"
+        />
+        <div>
+          <h3 className="text-lg font-semibold">{product.title}</h3>
           <p className="text-gray-400">${product.price}</p>
         </div>
       </div>
-      <div className="flex items-center gap-4">
-        <button className={`text-xs p-2 rounded ${quantity <= 1 ? 'bg-zinc-700 cursor-not-allowed' : 'bg-zinc-800 hover:bg-zinc-700'}`} onClick={() => onUpdateQuantity(product.id, -1)} disabled={quantity <= 1}>
-          –
+      <div className="flex items-center">
+        <button
+          onClick={onDecrease}
+          className="px-2 py-1 bg-zinc-700 rounded-l"
+        >
+          -
         </button>
-        <p>{quantity}</p>
-        <button className="text-xs bg-zinc-800 p-2 rounded hover:bg-zinc-700" onClick={() => onUpdateQuantity(product.id, +1)}>
+        <span className="px-4 py-1 bg-zinc-600 flex items-center justify-center min-w-[40px]">
+          {quantity}
+        </span>
+        <button
+          onClick={onIncrease}
+          className="px-2 py-1 bg-zinc-700 rounded-r"
+        >
           +
         </button>
-        <button className="text-xs bg-red-600 p-2 rounded hover:bg-red-500" onClick={() => onRemove(product.id)}>
+        <button
+          onClick={onRemove}
+          className="ml-4 px-3 py-1 bg-red-600 rounded"
+        >
           Remove
         </button>
       </div>
