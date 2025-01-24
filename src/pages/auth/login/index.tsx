@@ -1,28 +1,29 @@
-'use client';
-
-import React, { useState, ChangeEvent } from 'react';
-import { LoginData, FormErrors } from '@/types';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { LoginData, FormLoginErrors } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-const Login: React.FC<LoginData> = ({ }) => {
+const Login: React.FC<LoginData> = ({}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [formErrors, setFormErrors] = useState<FormLoginErrors>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  }
-  
+  };
+
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const response = await fetch('https://api.escuelajs.co/api/v1/auth/login', {
@@ -34,22 +35,26 @@ const Login: React.FC<LoginData> = ({ }) => {
 
       if (data.access_token) {
         localStorage.setItem('token', data.access_token);
+        const token = localStorage.getItem('token');
         localStorage.setItem(
           'user',
           JSON.stringify({
-            email: email,
+            email,
           })
         );
-        setTimeout(() => {
+        if (token) {
           router.push('/products');
-        }, 1200);
+        }
       } else {
-        console.log('Login is unsuccesed', data);
         setFormErrors({ email: 'Invalid credentials' });
-      }
+      } 
+      
     } catch (error) {
       console.error('Error logging in', error);
+    } finally {
+      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -118,12 +123,15 @@ const Login: React.FC<LoginData> = ({ }) => {
 
               <div className="flex flex-col items-center justify-center gap-4">
                 <button
+                  disabled={isLoading}
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                    isLoading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                  } `}
                 >
-                  Login
+                  {isLoading ? 'Logging In...' : 'Login'}
                 </button>
-                <Link href={"/register"} className="text-sm">
+                <Link href={'/auth/register'} className="text-sm">
                   Register
                 </Link>
               </div>

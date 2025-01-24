@@ -5,4 +5,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 };
 
+module.exports = {
+  matcher: ['/products', '/cart', '/auth/:path*'],
+};
+
 export default nextConfig;

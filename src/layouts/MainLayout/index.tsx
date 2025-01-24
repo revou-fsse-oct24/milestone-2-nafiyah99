@@ -1,16 +1,13 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
-interface MainLayoutProps {
-  children: React.ReactNode;
-}
+import { MainLayoutProps } from '@/types';
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
       <Header />
-      <main className='m-2'>{children}</main>
+      <main className='m-20 p-10'>{children}</main>
       <Footer />
     </>
   );

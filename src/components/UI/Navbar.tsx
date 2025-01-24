@@ -1,28 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-// import LogoutModal from './LogoutModal';
+import LogoutModal from '../modals/LogoutModal'; // Updated import path
 
 const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  // const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
-  // const isLoggedIn = Boolean(localStorage.getItem('token'));
+  useEffect(() => {
+    // Check if localStorage is available and set login status
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(Boolean(localStorage.getItem('token')));
+    }
+  }, []);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('refresh_token');
-  //   router.push('/');
-  // };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    router.push('/');
+  };
 
-  // const toggleMenu = () => {
-  //   setIsMenuOpen(!isMenuOpen);
-  // };
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <>
-      {/* <header className="fixed bg-zinc-900 py-5 px-10 top-0 left-0 right-0 p-3 flex justify-between z-50">
+      <header className="fixed bg-zinc-900 py-5 px-10 top-0 left-0 right-0 p-3 flex justify-between z-50">
         <p className="text-4xl font-semibold">ShopSmart</p>
         <nav className="flex items-center">
           <button
@@ -45,17 +51,17 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
             } md:flex`}
           >
             <li>
-              <Link href="/" onClick={() => setIsMenuOpen(false)}>
+              <Link href={"/"} onClick={() => setIsMenuOpen(false)}>
                 Home
               </Link>
             </li>
             <li>
-              <Link href="/product" onClick={() => setIsMenuOpen(false)}>
+              <Link href={"/products"} onClick={() => setIsMenuOpen(false)}>
                 Product List
               </Link>
             </li>
             <li>
-              <Link href="/cart" onClick={() => setIsMenuOpen(false)}>
+              <Link href={"/cart"} onClick={() => setIsMenuOpen(false)}>
                 Cart {isLoggedIn ? `(${cartItemCount})` : ''}
               </Link>
             </li>
@@ -71,7 +77,7 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
                   Logout
                 </button>
               ) : (
-                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                <Link href={"/auth/login"} className='text-black' onClick={() => setIsMenuOpen(false)}>
                   Login
                 </Link>
               )}
@@ -108,7 +114,7 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
               </Link>
             </li>
             <li>
-              <Link href="/product" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/products" onClick={() => setIsMenuOpen(false)}>
                 Product List
               </Link>
             </li>
@@ -129,7 +135,7 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
                   Logout
                 </button>
               ) : (
-                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/auth/login" onClick={() => setIsMenuOpen(false)}>
                   Login
                 </Link>
               )}
@@ -142,10 +148,7 @@ const Navbar = ({ cartItemCount }: { cartItemCount: number }) => {
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}
-      /> */}
-      <div className="bg-zinc-800">
-        <h1>header</h1>
-      </div>
+      />
     </>
   );
 };
