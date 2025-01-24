@@ -1,104 +1,56 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/router';
-import { AuthContextType } from '@/types'; // Corrected import statement
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { useRouter } from "next/router";
+
+interface AuthContextType {
+  isAuthenticated: boolean;
+  token: string | null;
+  login: (token: string) => void;
+  logout: () => void;
+  checkAuth: () => boolean;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [cart, setCart] = useState<any[] | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    const storedCart = localStorage.getItem('cart');
-
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-    }
-
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
-    }
+    checkAuth();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await fetch('https://api.escuelajs.co/api/v1/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if(!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      if (data.access_token) {
-        setToken(data.access_token);
-        localStorage.setItem('token', data.access_token);
-
-        setUser({ email });
-        localStorage.setItem('user', JSON.stringify({ email }));
-
-        const cartResponse = await fetch('https://api.escuelajs.co/api/v1/cart', {
-          headers: {
-            Authorization: `Bearer ${data.access_token}`,
-          },
-        });
-
-        const cartData = await cartResponse.json();
-        setCart(cartData);
-        localStorage.setItem('cart', JSON.stringify(cartData));
-
-        router.push('/products');
-      } else {
-        throw new Error('Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
+  const checkAuth = () => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      setIsAuthenticated(true);
+      return true;
     }
-  };
-
-  const refreshAccessToken = async () => {
-    const refreshToken = localStorage.getItem('refresh_token');
-    if (refreshToken) {
-      try {
-        const response = await fetch('/api/auth/refresh', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refresh_token: refreshToken }),
-        });
-        const data = await response.json();
-        if (data.access_token) {
-          localStorage.setItem('token', data.access_token);
-          return true;
-        }
-      } catch (error) {
-        console.error('Error refreshing token', error);
-      }
-    }
+    setIsAuthenticated(false);
     return false;
   };
-  
+
+  const login = (newToken: string) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+    setIsAuthenticated(true);
+    router.push("/products");
+  };
 
   const logout = () => {
+    localStorage.removeItem("token");
     setToken(null);
-    setUser(null);
-    setCart(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('cart');
-    document.cookie = 'token=; Max-Age=0; path=/'; // Remove token from cookies
-    router.push('/auth/login');
+    setIsAuthenticated(false);
+    router.push("/auth/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, cart, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, token, login, logout, checkAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -107,7 +59,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
